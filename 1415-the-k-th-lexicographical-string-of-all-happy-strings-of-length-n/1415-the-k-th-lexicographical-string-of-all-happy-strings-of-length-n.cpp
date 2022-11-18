@@ -1,43 +1,20 @@
 class Solution {
 public:
     
-    void solve(int k,char p,string &output,vector<string> &ans)
-    {
-        if(k==0)
-        {
-            ans.push_back(output);
-            return;
-        }
-        for(char s='a';s<='c';s++)
-        {
-            if(p != s)
-            {
-                output.push_back(s);
-                solve(k-1,s,output,ans);
-                output.pop_back();
-            }
-        }
-    }
-    
     string getHappyString(int n, int k)
     {
-        vector<string> ans;
-        string output;
-        for(char p='a';p<='c';p++)
-        {
-            output.push_back(p);
-            solve(n-1,p,output,ans);
-            output.pop_back();
-        }
-        sort(ans.begin(),ans.end());
-        for(auto i:ans)
-        {
-            cout<<i<<" ";
-        }
-        if(ans.size() < k)
-        {
+        auto prem = 1 << (n - 1);
+        if (k > 3 * prem)
             return "";
+        string s;
+        s+=('a' + (k - 1) / prem);
+        cout<<s<<endl;
+        while (prem > 1) 
+        {
+            k = (k - 1) % prem + 1;
+            prem >>= 1;
+            s += (k - 1) / prem == 0 ? 'a' + (s.back() == 'a') : 'b' + (s.back() != 'c');
         }
-        return ans[k-1];
+        return s;
     }
 };
