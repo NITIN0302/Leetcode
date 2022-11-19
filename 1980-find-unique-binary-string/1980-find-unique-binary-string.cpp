@@ -15,6 +15,10 @@ public:
         {
             output += (i+'0');
             solve(n-1,m,output,ans);
+            if(ans.length() > 0)
+            {
+                return;
+            }
             output.pop_back();
         }
     }
@@ -30,7 +34,7 @@ public:
         
         int n = nums[0].length();
         string output;
-        string ans;
+        string ans = "";
         solve(n,m,output,ans);
         return ans;
     }
