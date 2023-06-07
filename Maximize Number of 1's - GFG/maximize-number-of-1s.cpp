@@ -15,13 +15,13 @@ public:
 	    int high = 0;
 	    int ans = 0;
 	    int count =0;
-	    for(int high=0;high<n;high++)
+	    while(high<n)
 	    {
 	        if(arr[high] == 0)
 	        {
 	            count++;
 	        }
-	        while(count > m)
+	        while(count > m && low<=high)
 	        {
 	            if(arr[low] == 0)
 	            {
@@ -30,6 +30,7 @@ public:
 	            low++;
 	        }
 	        ans = max(ans,high-low+1);
+	        high++;
 	    }
         return ans;
     }  
