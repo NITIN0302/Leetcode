@@ -7,31 +7,26 @@ class Solution
 {
   public:
     
-    bool isbfscycle(int src,vector<int> &visited,vector<int> &parent,vector<int> adj[])
+    bool isdfscycle(int src,vector<int> &visited,int parent,vector<int> adj[])
     {
-        queue<int> q;
-        q.push(src);
         visited[src] = true;
-        parent[src] = -1;
         
-        while(!q.empty())
+        for(auto i:adj[src])
         {
-            int top = q.front();
-            q.pop();
-            for(auto i:adj[top])
+            if(visited[i] == false)
             {
-                if(visited[i] == false)
-                {
-                    q.push(i);
-                    visited[i] = true;
-                    parent[i] = top;
-                }
-                else if(parent[top] != i)
+                bool ans = isdfscycle(i,visited,src,adj);
+                if(ans == true)
                 {
                     return true;
                 }
             }
+            else if(i != parent)
+            {
+                return true;
+            }
         }
+        
         return false;
     }
     
@@ -44,7 +39,7 @@ class Solution
         {
             if(visited[i] == false)
             {
-                bool a = isbfscycle(i,visited,parent,adj);
+                bool a = isdfscycle(i,visited,-1,adj);
                 if(a == true)
                 {
                     return true;
