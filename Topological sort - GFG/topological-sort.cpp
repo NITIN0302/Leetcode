@@ -6,33 +6,30 @@ using namespace std;
 class Solution
 {
 	public:
-	
-	void solve(int src,vector<int> adj[],stack<int> &s,vector<int> &visited)
+	void topo(int src,vector<int> adj[],vector<bool> &visited,stack<int> &s)
 	{
 	    visited[src] = true;
 	    for(auto i:adj[src])
 	    {
-	        if(!visited[i])
+	        if(visited[i] == false)
 	        {
-	            solve(i,adj,s,visited);
+	            topo(i,adj,visited,s);
 	        }
 	    }
 	    s.push(src);
 	}
-	
 	vector<int> topoSort(int V, vector<int> adj[]) 
 	{
-	    vector<int> ans;
+	    vector<bool> visited(V,false);
 	    stack<int> s;
-	    vector<int> visited(V,0);
-	    solve(0,adj,s,visited);
 	    for(int i=0;i<V;i++)
 	    {
 	        if(visited[i] == false)
 	        {
-	            solve(i,adj,s,visited);
+	            topo(i,adj,visited,s);
 	        }
 	    }
+	    vector<int> ans;
 	    while(!s.empty())
 	    {
 	        ans.push_back(s.top());
