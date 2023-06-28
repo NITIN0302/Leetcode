@@ -3,57 +3,81 @@
 using namespace std;
 
 // } Driver Code Ends
+
+class disjoint_set
+{
+    public:
+    vector<int> parent,rank;
+    
+    disjoint_set(int n)
+    {
+        parent.resize(n);
+        rank.resize(n);
+        for(int i=0;i<n;i++)
+        {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+    
+    int find_parent(int n)
+    {
+        if(parent[n] == n)
+        {
+            return n;
+        }
+        parent[n] = find_parent(parent[n]);
+    }
+    
+    void union_find(int a,int b)
+    {
+        int prt_a = find_parent(a);
+        int prt_b = find_parent(b);
+        if(rank[prt_a] > rank[prt_b])
+        {
+            parent[prt_b] = prt_a;
+        }
+        else if(rank[prt_b] > rank[prt_a])
+        {
+            parent[prt_a] = prt_b;
+        }
+        else
+        {
+            parent[prt_a] = prt_b;
+            rank[prt_b]++;
+        }
+    }
+};
+
 class Solution
 {
 	public:
     int spanningTree(int V, vector<vector<int>> adj[])
     {
-        unordered_map<int,vector<pair<int,int>>> m;
-        vector<int> key(V,INT_MAX);
-        vector<bool> MST(V,false);
-        vector<int> parent(V,-1);
-        key[0] = 0;
-        parent[0] = -1;
+        disjoint_set *ds = new disjoint_set(V);
+        
+        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,
+        greater<pair<int,pair<int,int>>>> pq;
         
         for(int i=0;i<V;i++)
         {
             for(auto j:adj[i])
             {
-                m[i].push_back({j[0],j[1]});
-                m[j[0]].push_back({i,j[1]});
-            }
-        }
-        
-        while(1)
-        {
-            int minkey = INT_MAX;
-            int node = -1;
-            for(int i=0;i<V;i++)
-            {
-                if(MST[i] == false && minkey > key[i])
-                {
-                    minkey = key[i];
-                    node = i;
-                }
-            }
-            if(minkey == INT_MAX || node == -1)
-            {
-                break;
-            }
-            MST[node] = true;
-            for(auto i:m[node])
-            {
-                if(MST[i.first] == false && key[i.first] > i.second)
-                {
-                    key[i.first] = i.second;
-                    parent[i.first] = node;
-                }
+                pq.push({j[1],{j[0],i}});
             }
         }
         int ans = 0;
-        for(int i=0;i<V;i++)
+        while(!pq.empty())
         {
-            ans += key[i];
+            int w = pq.top().first;
+            int u = pq.top().second.first;
+            int v = pq.top().second.second;
+            pq.pop();
+            if(ds->find_parent(u) != ds->find_parent(v))
+            {
+                ans += w;
+                ds->union_find(u,v);
+            }
         }
         return ans;
     }
