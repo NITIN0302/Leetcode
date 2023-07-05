@@ -7,60 +7,50 @@ using namespace std;
 // } Driver Code Ends
 // User function Template for C++
 
-class Solution{
+class Solution
+{
 public:
 
-    bool solve(int index,int N,int nums[],int sum,vector<vector<int>> &dp)
+    int solve(int index,int arr[],int sum,vector<vector<int>> &dp)
     {
-        if(index >= N)
-        {
-            if(sum == 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
         if(sum < 0)
         {
+            return 0;
+        }
+        if(sum == 0)
+        {
+            return 1;
+        }
+        if(index < 0)
+        {
             return false;
         }
-
+        
         if(dp[index][sum] != -1)
         {
             return dp[index][sum];
         }
-
-        if(sum == 0)
-        {
-            return true;
-        }
-
-        bool include = solve(index+1,N,nums,sum-nums[index],dp);
-
-        bool exclude = solve(index+1,N,nums,sum,dp);
-
-        return dp[index][sum] = include||exclude;
+        
+        int exclude = solve(index-1,arr,sum,dp);
+        
+        int include = solve(index-1,arr,sum-arr[index],dp);
+        
+        return dp[index][sum] = (include || exclude);
     }
 
     int equalPartition(int N, int arr[])
     {
         int sum = 0;
-
         for(int i=0;i<N;i++)
         {
             sum += arr[i];
         }
-        vector<vector<int>> dp(N+1,vector<int>(sum+1,-1));
-
-        if(N == 1 || sum%2 == 1)
+        if(sum%2 == 1)
         {
-            return false;
+            return 0;
         }
-        
-        sum /= 2;
-
-        return solve(0,N,arr,sum,dp);
+        vector<vector<int>> dp(N+1,vector<int>(sum/2+1,-1));
+        return solve(N-1,arr,sum/2,dp);
     }
 };
 
