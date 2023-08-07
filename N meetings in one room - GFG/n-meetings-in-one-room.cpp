@@ -12,25 +12,23 @@ class Solution
         return a.second < b.second;
     }
     
-    
     int maxMeetings(int start[], int end[], int n)
     {
-        int ansEnd = 0;
-        vector<pair<int,int>> v;
+        vector<pair<int,int>> times;
         for(int i=0;i<n;i++)
         {
-            v.push_back({start[i],end[i]});
+            times.push_back({start[i],end[i]});
         }
-        sort(v.begin(),v.end(),cmp);
-        
-        ansEnd = v[0].second;
-        int ans = 1;
-        for(int i=1;i<n;i++)
+        int count = 0;
+        sort(times.begin(),times.end(),cmp);
+        int ans = 0;
+        int maxi = 0;
+        for(int i=0;i<times.size();i++)
         {
-            if(v[i].first > ansEnd)
+            if(maxi < times[i].first)
             {
                 ans++;
-                ansEnd = v[i].second;
+                maxi = times[i].second;
             }
         }
         return ans;
